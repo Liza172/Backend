@@ -19,9 +19,9 @@ app.get("/login", function(req, res){
   res.render("login");
 })
 
-app.post("/register", function(req, res){
+app.post("/register", async function(req, res){
   
-  let user = userModel.findOne(req.body.email);
+  let user = await userModel.findOne({email:req.body.email});
   if(user)
     return res.status(500).send("User already registered!!")
 
@@ -37,16 +37,16 @@ app.post("/register", function(req, res){
           email: req.body.email,
           password: hash,
       });
-      let token = jwt.sign({email : email, userid: user._id}, "aaaa");
+      let token = jwt.sign({email : user.email, userid: user._id}, "aaaa");
       res.cookie("token", token);
       res.send("registered");
     })
   })
 })
 
-app.post("/login", function(req, res){
+app.post("/login", async function(req, res){
   
-  let user = userModel.findOne(req.body.email);
+  let user = await userModel.findOne({email : req.body.email});
   if(!user)
     return res.status(500).send("Somthing Went Wrong!!")
 
@@ -54,9 +54,9 @@ app.post("/login", function(req, res){
       if(result)
       {
         
-        let token = jwt.sign({email : email, userid: user._id}, "aaaa");
+        let token = jwt.sign({email : user.email, userid: user._id}, "aaaa");
         res.cookie("token", token);
-        res.status(200).send("You can login");
+        res.status(200).redirect("/profile");
       }
         
       else res.redirect("/login");
@@ -68,14 +68,27 @@ app.post("/login", function(req, res){
     res.redirect("/login");
   })
 
-  app.get('/profile', isLoggedIn, (req,res)=>
+  app.post('/post', isLoggedIn, async (req,res)=>
+    {
+      let user = await userModel.findOne({email : req.user.email});
+      let post = await postModel.create({
+        user : user._id,
+        content : req.body.content
+      });
+      user.posts.push(post._id);
+      await user.save();
+      res.redirect("/profile");
+    });
+
+  app.get('/profile', isLoggedIn, async (req,res)=>
   {
-    res.render("login");
+    let user = await userModel.findOne({email : req.user.email})
+    res.render("profile", {user});
   })
 
   function isLoggedIn(req, res, next)
   {
-    if(req.cookies.token === "") res.send("You must be logged in");
+    if(req.cookies.token === "") res.redirect("/login");
     else
     {
       let data = jwt.verify(req.cookies.token, "aaaa");
