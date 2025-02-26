@@ -24,12 +24,15 @@
         <h3 class="text-zinc-400">Your Posts.</h3>
         <div class="postconatiner mt-5">
           <% user.posts.reverse().forEach(function(post){ %>
-            <div class="post w-1/3 p-4 rounded-md border-[1px] border-zinc-500 bg-zinc-800">
+            <div class="post w-1/3 p-4 rounded-md border-[1px] border-zinc-500 bg-zinc-800 mt-4">
             <h4 class="text-blue-500 mb-2"><%= user.username %></h4>
             <p class="text-sm tracking-tight"><%= post.content %></p>
+            <small class="mt-2 inline-block"><%= post.likes.length %></small>
             <div class="flex gap-4">
-              <p class="text-blue-500 mt-2">Like</p> 
-              <p class="text-zinc-500 mt-2">edit</p>
+              <a class="text-blue-500 mt-2" href="/like/<%= post._id %>" >
+                <%= post.likes.indexOf(user._id) === -1 ? "Like" : "Unlike" %>
+              </a> 
+              <a class="text-zinc-500 mt-2" href="/edit/<%= post._id %>">edit</a>
             </div>
             </div>
           <% }) %>
