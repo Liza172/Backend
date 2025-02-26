@@ -38,7 +38,8 @@ app.get("/test", function(req, res){
   res.render("test");
 })
 app.post("/upload", upload.single("image") ,function(req, res){
-  console.log(req.body);
+  console.log(req.file);
+  res.redirect("/test");
 })
 
 app.get("/login", function(req, res){
