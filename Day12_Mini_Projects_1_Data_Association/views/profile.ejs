@@ -12,7 +12,7 @@
       <a class="bg-red-600 rounded-md px-3 py-2 text-sm md-5 inline-block" href="/logout">Log Out</a>
     </div>
   
-    <form action="/profile" method="post">
+    <!-- <form action="/profile" method="post"> -->
      <h3 class="text-3xl mb-3">Hello, <%= user.name %></h3>
      <h5>You can create a post.</h5>
      <form action="/post" method="post">
@@ -23,27 +23,20 @@
      <div class="posts mt-20">
         <h3 class="text-zinc-400">Your Posts.</h3>
         <div class="postconatiner mt-5">
-          <div class="post w-1/3 p-4 rounded-md border-[1px] border-zinc-500 bg-zinc-800">
-            <h4 class="text-blue-500 mb-2">@someuser</h4>
-            <p class="text-sm tracking-tight">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio recusandae quidem hic quae eaque incidunt sequi vitae et beatae itaque magnam, veniam odit!</p>
+          <% user.posts.reverse().forEach(function(post){ %>
+            <div class="post w-1/3 p-4 rounded-md border-[1px] border-zinc-500 bg-zinc-800">
+            <h4 class="text-blue-500 mb-2"><%= user.username %></h4>
+            <p class="text-sm tracking-tight"><%= post.content %></p>
             <div class="flex gap-4">
-             <p class="text-blue-500 mt-2">Like</p> 
-             <p class="text-zinc-500 mt-2">edit</p>
+              <p class="text-blue-500 mt-2">Like</p> 
+              <p class="text-zinc-500 mt-2">edit</p>
             </div>
-          </div>
-        </div>
-        <div class="postconatiner mt-5">
-          <div class="post w-1/3 p-4 rounded-md border-[1px] border-zinc-500 bg-zinc-800">
-            <h4 class="text-blue-500 mb-2">@someuser</h4>
-            <p class="text-sm tracking-tight">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odio recusandae quidem hic quae eaque incidunt sequi vitae et beatae itaque magnam, veniam odit!</p>
-            <div class="flex gap-4">
-             <p class="text-blue-500 mt-2">Like</p> 
-             <p class="text-zinc-500 mt-2">edit</p>
             </div>
-          </div>
+          <% }) %>
+          
         </div>
      </div>
-     
+   
   </div>
 </body>
 </html>
