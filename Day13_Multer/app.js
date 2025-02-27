@@ -25,7 +25,6 @@ const storage = multer.diskStorage({
       const fn = bytes.toString("hex")+ path.extname(file.originalname);
       cb(null, fn);
     })
-    
   }
 })
 

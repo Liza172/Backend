@@ -22,15 +22,7 @@ app.get("/", function(req, res){
   res.render("index");
 })
 
-app.get("/profile/upload", function(req, res){
-  res.render("uploadprofile");
-})
-app.post("/upload", upload.single("image"), async function(req, res){
-  let user = await userModel.findOne({email: req.user.email});
-  user.profilepic = req.file.filename;
-  await user.save();
-  res.redirect('/profile');
-})
+
 
 
 app.get("/login", function(req, res){
@@ -143,6 +135,16 @@ app.post("/login", async function(req, res){
     }
     next();
   }
+
+  app.get("/profile/upload", function(req, res){
+    res.render("uploadprofile");
+  })
+  app.post("/upload",isLoggedIn, upload.single("image"), async function(req, res){
+    let user = await userModel.findOne({email: req.user.email});
+    user.profilepic = req.file.filename;
+    await user.save();
+    res.redirect('/profile');
+  })
 
 
 app.listen(3000);
